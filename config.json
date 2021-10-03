@@ -1,0 +1,41 @@
+{
+  "collections": [
+    {
+      "collection": "<collection>",
+      "price": 1,
+      "webhooks": [
+        {
+          "name": "<name>",
+          "url": "<url>",
+          "footer_name": "<footer_name>",
+          "footer_image_url": "<footer_image_url>"
+        },
+        {
+          "name": "<name>",
+          "url": "<url>",
+          "footer_name": "<footer_name>",
+          "footer_image_url": "<footer_image_url>"
+        }
+      ]
+    },
+    {
+      "collection": "<collection>",
+      "price": 1,
+      "webhooks": [
+        {
+          "name": "<name>",
+          "url": "<url>",
+          "footer_name": "<footer_name>",
+          "footer_image_url": "<footer_image_url>"
+        },
+        {
+          "name": "<name>",
+          "url": "<url>",
+          "footer_name": "<footer_name>",
+          "footer_image_url": "<footer_image_url>"
+        }
+      ]
+    }
+  ],
+  "avatar_url": "https://pbs.twimg.com/profile_images/1444484250821087232/3zEbdU1R_400x400.jpg"
+}
