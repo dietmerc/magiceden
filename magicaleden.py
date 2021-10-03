@@ -63,7 +63,7 @@ def monitor(collection, price, webhooks):
             "https://api-mainnet.magiceden.io/rpc/getListedNFTsByQuery?q={\"$match\": {\"collectionSymbol\": \"" + collection + "\"}, \"$sort\": {\"takerAmount\": 1, \"createdAt\": -1}, \"$skip\": 0, \"$limit\": 500}")
         try:
             for NFTS in response.json()['results']:
-                if NFTS['price'] <= price:
+                if NFTS['price'] <= price and NFTS['price'] != 0 and NFTS['price'] is not None:
                     if NFTS not in OLD_NFTS:
                         OLD_NFTS.append(NFTS)
                         for webhook in webhooks:
