@@ -1,4 +1,4 @@
-# MagicalEden - Monitor
+# MagicEden - Monitor
 
 ## Installation :
 
@@ -84,4 +84,4 @@ Exemple :
 
 ## Execution :
 
-    python magicaleden.py
+    python magiceden.py
