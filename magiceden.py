@@ -23,7 +23,7 @@ def getDate():
     return datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
 
-def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, footer_image_url, collection):
+def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, footer_image_url, collection, next_lowest_price):
     data = {
         "embeds": [
             {
@@ -33,7 +33,13 @@ def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, 
                 "fields": [
                     {
                         "name": "Collection",
-                        "value": "[" + collection + "]" + "(" + "https://magiceden.io/marketplace?collection_symbol=" + collection + ")"
+                        "value": "[" + collection + "]" + "(" + "https://magiceden.io/marketplace?collection_symbol=" + collection + ")",
+                        "inline": True
+                    },
+                    {
+                        "name": "Prochain prix",
+                        "value": next_lowest_price + " sol",
+                        "inline": True
                     }
                 ],
                 "thumbnail": {
@@ -60,7 +66,7 @@ def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, 
 def monitor(collection, price, webhooks):
     while True:
         response = requests.get(
-            "https://api-mainnet.magiceden.io/rpc/getListedNFTsByQuery?q={\"$match\": {\"collectionSymbol\": \"" + collection + "\"}, \"$sort\": {\"takerAmount\": 1, \"createdAt\": -1}, \"$skip\": 0, \"$limit\": 500}")
+            "https://api-mainnet.magiceden.io/rpc/getListedNFTsByQuery?q={\"$match\": {\"collectionSymbol\": \"" + collection + "\"}, \"$sort\": {\"takerAmount\": 1, \"createdAt\": -1}, \"$skip\": 0, \"$limit\": 10}")
         try:
             for NFTS in response.json()['results']:
                 if NFTS['price'] <= price and NFTS['price'] != 0 and NFTS['price'] is not None:
@@ -68,7 +74,7 @@ def monitor(collection, price, webhooks):
                         OLD_NFTS.append(NFTS)
                         for webhook in webhooks:
                             sendCode(NFTS['title'], str(NFTS['price']), NFTS['img'], "https://magiceden.io/item-details/" +
-                                     NFTS['mintAddress'], webhook['name'], webhook['url'], webhook['footer_name'], webhook['footer_image_url'], collection)
+                                     NFTS['mintAddress'], webhook['name'], webhook['url'], webhook['footer_name'], webhook['footer_image_url'], collection, str(response.json()['results'][1]['price']))
                         delete_nft_thread = threading.Thread(
                             target=delete_nft, args=(NFTS,))
                         delete_nft_thread.start()
