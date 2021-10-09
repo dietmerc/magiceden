@@ -37,7 +37,7 @@ def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, 
                         "inline": True
                     },
                     {
-                        "name": "Prochain prix",
+                        "name": "Next price",
                         "value": next_lowest_price + " sol",
                         "inline": True
                     }
