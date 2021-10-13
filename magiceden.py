@@ -14,13 +14,16 @@ avatar_url = config['avatar_url']
 
 def delete_nft(NFT):
     global OLD_NFTS
-    print("Deleting : " + NFT['title'] + " in 10 minutes")
+    printWithDate("Deleting : " + NFT['title'] + " in 10 minutes")
     time.sleep(600)
     OLD_NFTS.remove(NFT)
 
 
 def getDate():
     return datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
+def printWithDate(string):
+    print("[" + getDate() + "] " + string)
 
 
 def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, footer_image_url, collection, next_lowest_price):
@@ -58,9 +61,9 @@ def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, 
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        print(err)
+        printWithDate(err)
     else:
-        print("Webhook sent to : " + webhook_name)
+        printWithDate("Webhook sent to : " + webhook_name)
 
 
 def monitor(collection, price, webhooks):
@@ -79,12 +82,12 @@ def monitor(collection, price, webhooks):
                             target=delete_nft, args=(NFTS,))
                         delete_nft_thread.start()
         except json.decoder.JSONDecodeError:
-            print("Can't reach MagicEden.")
+            printWithDate("Can't reach MagicEden.")
 
 
 def main():
     for collection in collections:
-        print("Monitoring : " + collection['collection'] +
+        printWithDate("Monitoring : " + collection['collection'] +
               " <= " + str(collection['price']) + " sol")
         monitor_thread = threading.Thread(target=monitor, args=(
             collection['collection'], collection['price'], collection['webhooks'],))
