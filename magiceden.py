@@ -1,5 +1,6 @@
 import datetime
 import requests
+import cloudscraper
 import threading
 import time
 import json
@@ -68,8 +69,9 @@ def sendCode(name, price, img, nft_url, webhook_name, webhook_url, footer_name, 
 
 def monitor(collection, price, webhooks):
     while True:
-        response = requests.get(
-            "https://api-mainnet.magiceden.io/rpc/getListedNFTsByQuery?q={\"$match\": {\"collectionSymbol\": \"" + collection + "\"}, \"$sort\": {\"takerAmount\": 1, \"createdAt\": -1}, \"$skip\": 0, \"$limit\": 10}")
+        scraper = cloudscraper.create_scraper() 
+        response = scraper.get(
+            'https://api-mainnet.magiceden.io/rpc/getListedNFTsByQuery?q={"$match":{"collectionSymbol":"' + collection + '"},"$sort":{"takerAmount":1,"createdAt":-1},"$skip":0,"$limit":20}')
         try:
             for NFTS in response.json()['results']:
                 if NFTS['price'] <= price and NFTS['price'] != 0 and NFTS['price'] is not None:
@@ -81,6 +83,7 @@ def monitor(collection, price, webhooks):
                         delete_nft_thread = threading.Thread(
                             target=delete_nft, args=(NFTS,))
                         delete_nft_thread.start()
+            printWithDate(str(response.status_code))
         except json.decoder.JSONDecodeError:
             printWithDate("Can't reach MagicEden.")
 
